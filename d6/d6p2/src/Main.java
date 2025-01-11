@@ -9,10 +9,11 @@ public class Main {
     public static int iCurrent = 0;
     public static int jCurrent = 0;
     public static int moveCounter = 1;
+    public static boolean loopChecker = false;
 
     public static void main(String[] args) {
 
-        File file = new File("D:\\JavaProjects\\AOC_24\\d6\\in.txt");
+        File file = new File("D:\\REPO\\AOC_24\\d6\\in.txt");
         String[][] map = new String[130][130];
 
         try{
@@ -41,7 +42,7 @@ public class Main {
                 }
             }
         }
-        while(!end){
+        while(!loopChecker || !end){
             switch(map[iCurrent][jCurrent]){
 
                 case "^":
@@ -117,7 +118,7 @@ public class Main {
                     moveCounter++;
                 }
                 map[iStart-1][jStart] = "^";
-                map[iStart][jStart] = "..";
+                map[iStart][jStart] = "..^";
                 break;
 
             case ">":
@@ -125,7 +126,7 @@ public class Main {
                     moveCounter++;
                 }
                 map[iStart][jStart+1] = ">";
-                map[iStart][jStart] = "..";
+                map[iStart][jStart] = "..>";
                 break;
 
             case "v":
@@ -133,7 +134,7 @@ public class Main {
                     moveCounter++;
                 }
                 map[iStart+1][jStart] = "v";
-                map[iStart][jStart] = "..";
+                map[iStart][jStart] = "..v";
                 break;
 
             case "<":
@@ -141,7 +142,7 @@ public class Main {
                     moveCounter++;
                 }
                 map[iStart][jStart-1] = "<";
-                map[iStart][jStart] = "..";
+                map[iStart][jStart] = "..<";
                 break;
         }
     }
