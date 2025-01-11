@@ -6,60 +6,78 @@ import java.util.Scanner;
 public class Main {
 
     public static boolean end = false;
-    public static int iCurrent = 0;
-    public static int jCurrent = 0;
+    public static int iCurrent = 41;
+    public static int jCurrent = 96;
     public static int moveCounter = 1;
-    public static boolean loopChecker = false;
+    public static int loopCounter = 0;
+    public static boolean inLoop = false;
+    public static String direction = "^";
 
     public static void main(String[] args) {
 
         File file = new File("D:\\REPO\\AOC_24\\d6\\in.txt");
         String[][] map = new String[130][130];
 
-        try{
 
-            Scanner sc = new Scanner(file);
-            int rowCounter = 0;
+        for(int whereToChange = 1; whereToChange <= 5067; whereToChange++) {            //iterate the place of change to "#"
 
-            while(sc.hasNextLine()){
+            try{
 
-                String line = sc.nextLine();
-                map[rowCounter] = line.split("");
-                rowCounter++;
-            }
+                Scanner sc = new Scanner(file);
+                int rowCounter = 0;
 
-        }catch(FileNotFoundException e)
-        {
-            System.out.println("File not found");
-        }
-        loop1:
-        for(int i = 0; i < map.length; i++){
-            for(int j = 0; j < map.length; j++){
-                if(Objects.equals(map[i][j], "^")){
-                    iCurrent = i;
-                    jCurrent = j;
-                    break loop1;
+                while(sc.hasNextLine()){
+
+                    String line = sc.nextLine();
+                    map[rowCounter] = line.split("");
+                    rowCounter++;
                 }
-            }
-        }
-        while(!loopChecker || !end){
-            switch(map[iCurrent][jCurrent]){
 
-                case "^":
-                    MoveUp(map, iCurrent, jCurrent);
-                    break;
-                case ">":
-                    MoveRight(map, iCurrent,jCurrent);
-                    break;
-                case "v":
-                    MoveDown(map, iCurrent,jCurrent);
-                    break;
-                case "<":
-                    MoveLeft(map, iCurrent,jCurrent);
-                    break;
+            }catch(FileNotFoundException e)                 //read file to array
+            {
+                System.out.println("File not found");
+            }
+            moveCounter = 1;
+
+            while (!end) {
+
+                if(moveCounter == whereToChange) {
+
+                    switch (map[iCurrent][jCurrent]) {
+
+                        case "^":
+                            map[iCurrent - 1][jCurrent] = "#";
+                            break;
+                        case ">":
+                            map[iCurrent][jCurrent + 1] = "#";
+                            break;
+                        case "v":
+                            map[iCurrent + 1][jCurrent] = "#";
+                            break;
+                        case "<":
+                            map[iCurrent][jCurrent - 1] = "#";
+                            break;
+                    }
+                }               //put "#"
+
+                switch (direction) {
+                    case "^":
+                        MoveUp(map, iCurrent, jCurrent);
+                        break;
+                    case ">":
+                        MoveRight(map, iCurrent, jCurrent);
+                        break;
+                    case "v":
+                        MoveDown(map, iCurrent, jCurrent);
+                        break;
+                    case "<":
+                        MoveLeft(map, iCurrent, jCurrent);
+                        break;
+                }
+
             }
         }
-        System.out.println(moveCounter);
+        System.out.println(loopCounter);
     }
     public static void MoveUp (String[][] map, int iStart, int jStart){
 
@@ -118,7 +136,7 @@ public class Main {
                     moveCounter++;
                 }
                 map[iStart-1][jStart] = "^";
-                map[iStart][jStart] = "..^";
+                map[iStart][jStart] = "..";
                 break;
 
             case ">":
@@ -126,7 +144,7 @@ public class Main {
                     moveCounter++;
                 }
                 map[iStart][jStart+1] = ">";
-                map[iStart][jStart] = "..>";
+                map[iStart][jStart] = "..";
                 break;
 
             case "v":
@@ -134,7 +152,7 @@ public class Main {
                     moveCounter++;
                 }
                 map[iStart+1][jStart] = "v";
-                map[iStart][jStart] = "..v";
+                map[iStart][jStart] = "..";
                 break;
 
             case "<":
@@ -142,7 +160,7 @@ public class Main {
                     moveCounter++;
                 }
                 map[iStart][jStart-1] = "<";
-                map[iStart][jStart] = "..<";
+                map[iStart][jStart] = "..";
                 break;
         }
     }
