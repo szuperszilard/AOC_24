@@ -28,9 +28,8 @@ public class Main {
             }
         }
 
-
         for(int whereToChange = 1; whereToChange <= 5632; whereToChange++) {            //iterate the place of change to "#" over the whole trail
-
+            System.out.println(whereToChange);
             try {
 
                 Scanner sc = new Scanner(file);
@@ -54,7 +53,6 @@ public class Main {
             iCurrent = 41;
             jCurrent = 96;
             direction = "^";
-
 
             while (!end) {
 
@@ -93,13 +91,11 @@ public class Main {
                 }
 
                 if (inLoop) {
-                        if(pathOfMovement[iWhereToPutX][jWhereToPutX].equals("ax")) {
-                            loopCounter++;
-                        }
+                    if(pathOfMovement[iWhereToPutX][jWhereToPutX].equals("ax")) {
+                        loopCounter++;
+                    }
                     break;
-
                 }
-
             }
         }
         System.out.println(loopCounter);
@@ -115,8 +111,7 @@ public class Main {
             map[iStart][jStart] = map[iStart][jStart] + "^";
             moveCounter++;
             iCurrent--;
-            if(map[iStart][jStart].length() > 200){
-
+            if(LoopChecker(map, iStart, jStart)){
                 inLoop = true;
             }
         }
@@ -133,8 +128,7 @@ public class Main {
             map[iStart][jStart] = map[iStart][jStart] + "v";
             moveCounter++;
             iCurrent++;
-            if(map[iStart][jStart].length() > 200){
-
+            if(LoopChecker(map, iStart, jStart)){
                 inLoop = true;
             }
         }
@@ -150,8 +144,7 @@ public class Main {
             map[iStart][jStart] = map[iStart][jStart] + ">";
             moveCounter++;
             jCurrent++;
-            if(map[iStart][jStart].length() > 200){
-
+            if(LoopChecker(map, iStart, jStart)){
                 inLoop = true;
             }
         }
@@ -167,8 +160,7 @@ public class Main {
             map[iStart][jStart] = map[iStart][jStart] + "<";
             moveCounter++;
             jCurrent--;
-            if(map[iStart][jStart].length() > 200){
-
+            if(LoopChecker(map, iStart, jStart)){
                 inLoop = true;
             }
         }
@@ -217,5 +209,12 @@ public class Main {
             iWhereToPutX = iStart;
             jWhereToPutX = jStart - 1;
         }
+    }
+    public static boolean LoopChecker (String[][] map, int i, int j) {
+
+        return map[i][j].contains("<<") || map[i][j].contains(">>")
+                || map[i][j].contains("vv") || map[i][j].contains("^^")
+                || map[i][j].contains("<><>") || map[i][j].contains("><><")
+                ||map[i][j].contains("^v^v") || map[i][j].contains("v^v^");
     }
 }
