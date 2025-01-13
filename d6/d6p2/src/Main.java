@@ -12,53 +12,70 @@ public class Main {
     public static int loopCounter = 0;
     public static boolean inLoop = false;
     public static String direction = "^";
+    public static int iWhereToPutX = 0;
+    public static int jWhereToPutX = 0;
+    public static String[][] pathOfMovement = new String[130][130];
+
+
 
     public static void main(String[] args) {
 
         File file = new File("D:\\REPO\\AOC_24\\d6\\in.txt");
         String[][] map = new String[130][130];
+        for(int i = 0; i < pathOfMovement.length; i++){
+            for(int j = 0; j < pathOfMovement.length; j++){
+                pathOfMovement[i][j] = "a";
+            }
+        }
 
 
-        for(int whereToChange = 1; whereToChange <= 5067; whereToChange++) {            //iterate the place of change to "#"
+        for(int whereToChange = 1; whereToChange <= 5632; whereToChange++) {            //iterate the place of change to "#" over the whole trail
 
-            try{
+            try {
 
                 Scanner sc = new Scanner(file);
                 int rowCounter = 0;
 
-                while(sc.hasNextLine()){
+                while (sc.hasNextLine()) {
 
                     String line = sc.nextLine();
                     map[rowCounter] = line.split("");
                     rowCounter++;
                 }
 
-            }catch(FileNotFoundException e)                 //read file to array
+            } catch (FileNotFoundException e)                 //read file to array
             {
                 System.out.println("File not found");
             }
+
             moveCounter = 1;
+            inLoop = false;
+            end = false;
+            iCurrent = 41;
+            jCurrent = 96;
+            direction = "^";
+
 
             while (!end) {
 
                 if(moveCounter == whereToChange) {
 
-                    switch (map[iCurrent][jCurrent]) {
+                    switch (direction) {
 
                         case "^":
-                            map[iCurrent - 1][jCurrent] = "#";
+                            PutHashUp(map, iCurrent, jCurrent);
                             break;
                         case ">":
-                            map[iCurrent][jCurrent + 1] = "#";
+                            PutHashRight(map, iCurrent, jCurrent);
                             break;
                         case "v":
-                            map[iCurrent + 1][jCurrent] = "#";
+                            PutHashDown(map, iCurrent, jCurrent);
                             break;
                         case "<":
-                            map[iCurrent][jCurrent - 1] = "#";
+                            PutHashLeft(map, iCurrent, jCurrent);
                             break;
                     }
-                }               //put "#"
+                }             //put "#"
 
                 switch (direction) {
                     case "^":
@@ -75,6 +92,14 @@ public class Main {
                         break;
                 }
 
+                if (inLoop) {
+                        if(pathOfMovement[iWhereToPutX][jWhereToPutX].equals("ax")) {
+                            loopCounter++;
+                        }
+                    break;
+
+                }
+
             }
         }
         System.out.println(loopCounter);
@@ -84,11 +109,16 @@ public class Main {
         if(iStart == 0){
             end = true;
         }else if(Objects.equals(map[iStart - 1][jStart], "#")){
-            map[iStart][jStart] = ">";
+            direction = ">";
             MoveRight(map, iStart, jStart);
         }else{
-            Swap(map, iStart, jStart);
+            map[iStart][jStart] = map[iStart][jStart] + "^";
+            moveCounter++;
             iCurrent--;
+            if(map[iStart][jStart].length() > 200){
+
+                inLoop = true;
+            }
         }
 
     }
@@ -97,11 +127,16 @@ public class Main {
         if(iStart == 129){
             end = true;
         }else if(Objects.equals(map[iStart + 1][jStart], "#")){
-            map[iStart][jStart] = "<";
+            direction = "<";
             MoveLeft(map, iStart, jStart);
         }else{
-            Swap(map, iStart, jStart);
+            map[iStart][jStart] = map[iStart][jStart] + "v";
+            moveCounter++;
             iCurrent++;
+            if(map[iStart][jStart].length() > 200){
+
+                inLoop = true;
+            }
         }
     }
     public static void MoveRight (String[][] map, int iStart, int jStart){
@@ -109,11 +144,16 @@ public class Main {
         if(jStart == 129){
             end = true;
         }else if(Objects.equals(map[iStart][jStart + 1], "#")){
-            map[iStart][jStart] = "v";
+            direction = "v";
             MoveDown(map, iStart, jStart);
         }else{
-            Swap(map, iStart, jStart);
+            map[iStart][jStart] = map[iStart][jStart] + ">";
+            moveCounter++;
             jCurrent++;
+            if(map[iStart][jStart].length() > 200){
+
+                inLoop = true;
+            }
         }
     }
     public static void MoveLeft (String[][] map, int iStart, int jStart){
@@ -121,47 +161,61 @@ public class Main {
         if(jStart == 0){
             end = true;
         }else if(Objects.equals(map[iStart][jStart - 1], "#")){
-            map[iStart][jStart] = "^";
+            direction = "^";
             MoveUp(map, iStart, jStart);
         }else{
-            Swap(map, iStart, jStart);
+            map[iStart][jStart] = map[iStart][jStart] + "<";
+            moveCounter++;
             jCurrent--;
+            if(map[iStart][jStart].length() > 200){
+
+                inLoop = true;
+            }
         }
     }
-    public static void Swap (String[][] map, int iStart, int jStart){
+    public static void PutHashUp (String[][] map, int iStart, int jStart){
 
-        switch (map[iStart][jStart]){
-            case "^":
-                if(!Objects.equals(map[iStart-1][jStart], "..")){
-                    moveCounter++;
-                }
-                map[iStart-1][jStart] = "^";
-                map[iStart][jStart] = "..";
-                break;
+        if(Objects.equals(map[iStart - 1][jStart], "#")){
+            PutHashRight(map, iStart, jStart);
+        }else{
+            map[iStart - 1][jStart] = "#";
+            pathOfMovement[iStart - 1][jStart] = pathOfMovement[iStart - 1][jStart] + "x";
+            iWhereToPutX = iStart - 1;
+            jWhereToPutX = jStart;
+        }
+    }
+    public static void PutHashRight (String[][] map, int iStart, int jStart){
 
-            case ">":
-                if(!Objects.equals(map[iStart][jStart+1], "..")){
-                    moveCounter++;
-                }
-                map[iStart][jStart+1] = ">";
-                map[iStart][jStart] = "..";
-                break;
+        if(Objects.equals(map[iStart][jStart + 1], "#")){
+            PutHashDown(map, iStart, jStart);
+        }else{
+            map[iStart][jStart + 1] = "#";
+            pathOfMovement[iStart][jStart + 1] = pathOfMovement[iStart][jStart + 1] + "x";
+            iWhereToPutX = iStart;
+            jWhereToPutX = jStart + 1;
 
-            case "v":
-                if(!Objects.equals(map[iStart+1][jStart], "..")){
-                    moveCounter++;
-                }
-                map[iStart+1][jStart] = "v";
-                map[iStart][jStart] = "..";
-                break;
+        }
+    }
+    public static void PutHashDown (String[][] map, int iStart, int jStart){
 
-            case "<":
-                if(!Objects.equals(map[iStart][jStart-1], "..")){
-                    moveCounter++;
-                }
-                map[iStart][jStart-1] = "<";
-                map[iStart][jStart] = "..";
-                break;
+        if(Objects.equals(map[iStart + 1][jStart], "#")){
+            PutHashLeft(map, iStart, jStart);
+        }else{
+            map[iStart + 1][jStart] = "#";
+            pathOfMovement[iStart + 1][jStart] = pathOfMovement[iStart + 1][jStart] + "x";
+            iWhereToPutX = iStart + 1;
+            jWhereToPutX = jStart;
+        }
+    }
+    public static void PutHashLeft (String[][] map, int iStart, int jStart){
+
+        if(Objects.equals(map[iStart][jStart - 1], "#")){
+            PutHashUp(map, iStart, jStart);
+        }else{
+            map[iStart][jStart - 1] = "#";
+            pathOfMovement[iStart][jStart - 1] = pathOfMovement[iStart][jStart - 1] + "x";
+            iWhereToPutX = iStart;
+            jWhereToPutX = jStart - 1;
         }
     }
 }
