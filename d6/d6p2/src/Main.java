@@ -19,6 +19,8 @@ public class Main {
 
 
     public static void main(String[] args) {
+        long start = System.nanoTime();
+
 
         File file = new File("D:\\REPO\\AOC_24\\d6\\in.txt");
         String[][] map = new String[130][130];
@@ -29,7 +31,7 @@ public class Main {
         }
 
         for(int whereToChange = 1; whereToChange <= 5632; whereToChange++) {            //iterate the place of change to "#" over the whole trail
-            
+
             try {
 
                 Scanner sc = new Scanner(file);
@@ -99,6 +101,9 @@ public class Main {
             }
         }
         System.out.println(loopCounter);
+        long finish = System.nanoTime();
+        long timeElapsed = finish - start;
+        System.out.println(timeElapsed);
     }
     public static void MoveUp (String[][] map, int iStart, int jStart){
 
