@@ -29,7 +29,7 @@ public class Main {
         }
 
         for(int whereToChange = 1; whereToChange <= 5632; whereToChange++) {            //iterate the place of change to "#" over the whole trail
-            System.out.println(whereToChange);
+            
             try {
 
                 Scanner sc = new Scanner(file);
@@ -214,7 +214,7 @@ public class Main {
 
         return map[i][j].contains("<<") || map[i][j].contains(">>")
                 || map[i][j].contains("vv") || map[i][j].contains("^^")
-                || map[i][j].contains("<><>") || map[i][j].contains("><><")
-                ||map[i][j].contains("^v^v") || map[i][j].contains("v^v^");
+                || map[i][j].contains("<><") || map[i][j].contains("><>")
+                ||map[i][j].contains("^v^") || map[i][j].contains("v^v");
     }
 }
